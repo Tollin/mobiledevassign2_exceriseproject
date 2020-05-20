@@ -13,4 +13,12 @@
     <string name="menu_slideshow">Slideshow</string>
 
     <string name="home_second">Home Second</string>
+    <string name="home_header">Coronavirus Overview</string>
+    <string name="new_confirmed">New Confirmed</string>
+    <string name="totalConfirmed">Total Confirmed</string>
+    <string name="newDeaths">New Deaths</string>
+    <string name="totalDeaths">Total Deaths</string>
+    <string name="totalRecovered">Total Recovered</string>
+    <string name="NewRecovered">New Recovered</string>
+    <string name="refresh">Refresh</string>
 </resources>
