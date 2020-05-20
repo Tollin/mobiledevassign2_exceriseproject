@@ -40,7 +40,7 @@ public class HomeFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         tvNewConfirm = root.findViewById(R.id.tvNewConfirm);
         tvTotalConfirm = root.findViewById(R.id.tvTotalConfirmed);
-        tvNewDeath = root.findViewById(R.id.tvNewDeath);
+        tvNewDeath = root.findViewById(R.id.tvNewDeath2);
         tvTotalDeath = root.findViewById(R.id.tvTotalDeath);
         tvNewRecover = root.findViewById(R.id.tvNewRecovered);
         tvTotalRecover = root.findViewById(R.id.tvTotalRecord);
@@ -82,8 +82,10 @@ public class HomeFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                byte[] errormessage = error.networkResponse.data;
+                String msg = new String(errormessage);
                 pbSearching.setVisibility(View.INVISIBLE);
-                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), msg, Toast.LENGTH_LONG).show();
             }
         });
 
