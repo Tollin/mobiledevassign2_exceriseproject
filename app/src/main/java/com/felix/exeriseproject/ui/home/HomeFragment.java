@@ -4,14 +4,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -23,36 +22,59 @@ import com.felix.exeriseproject.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private static String url ="https://api.covid19api.com/summary";
+    private TextView tvNewConfirm;
+    private TextView tvTotalConfirm;
+    private TextView tvNewDeath;
+    private TextView tvTotalDeath;
+    private TextView tvNewRecover;
+    private TextView tvTotalRecover;
+    private Button refresh;
+    private ProgressBar pbSearching;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-//        homeViewModel =
-//                ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView tvNewConfirm = root.findViewById(R.id.tvNewConfirm);
-//        final TextView textView = root.findViewById(R.id.tvHeader);
-//        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-//            @Override
-//            public void onChanged(@Nullable String s) {
-//                textView.setText(s);
-//            }
-//        });
+        tvNewConfirm = root.findViewById(R.id.tvNewConfirm);
+        tvTotalConfirm = root.findViewById(R.id.tvTotalConfirmed);
+        tvNewDeath = root.findViewById(R.id.tvNewDeath);
+        tvTotalDeath = root.findViewById(R.id.tvTotalDeath);
+        tvNewRecover = root.findViewById(R.id.tvNewRecovered);
+        tvTotalRecover = root.findViewById(R.id.tvTotalRecord);
+        refresh = root.findViewById(R.id.btnRefresh);
+        pbSearching= root.findViewById(R.id.pbSearching);
+        LoadGlobalInfo();
+        refresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoadGlobalInfo();
+            }
+        });
+        return root;
+    }
+
+    private void LoadGlobalInfo() {
         RequestQueue queue = Volley.newRequestQueue(getContext());
+        pbSearching.setVisibility(View.VISIBLE);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                       // textView.setText("Response is: "+ response.substring(0,500));
+                        pbSearching.setVisibility(View.INVISIBLE);
                         try {
                             JSONObject jobject= new JSONObject(response);
-                            Object global = jobject.getJSONObject("Global").get("NewConfirmed");
-                            tvNewConfirm.setText(global.toString());
+                            JSONObject global = jobject.getJSONObject("Global");
+                            Object newConfirm = global.getInt("NewConfirmed");
+                            tvNewConfirm.setText(String.valueOf(newConfirm));
+                            int totalConfirm = global.getInt("TotalConfirmed");
+                            tvTotalConfirm.setText(String.valueOf(totalConfirm));
+                            tvNewDeath.setText(String.valueOf(global.getInt("NewDeaths")));
+                            tvTotalDeath.setText(String.valueOf(global.getInt("TotalDeaths")));
+                            tvNewRecover.setText(String.valueOf(global.getInt("NewRecovered")));
+                            tvTotalRecover.setText(String.valueOf(global.getInt("TotalRecovered")));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -60,11 +82,11 @@ public class HomeFragment extends Fragment {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                pbSearching.setVisibility(View.INVISIBLE);
                 Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 
         queue.add(stringRequest);
-        return root;
     }
 }
