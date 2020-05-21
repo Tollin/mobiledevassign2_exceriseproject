@@ -32,7 +32,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 public class MapFragment extends Fragment {
 
-    MapView mMapView;
     private GoogleMap googleMap;
     private ImageButton btnLocate;
     private FusedLocationProviderClient fusedLocationClient;
@@ -55,27 +54,27 @@ public class MapFragment extends Fragment {
             @Override
             public void onClick(View v) {
                         fusedLocationClient.getLastLocation()
-                                .addOnSuccessListener(new OnSuccessListener<Location>() {
-                                    @Override
-                                    public void onSuccess(Location location) {
-                                        if(location != null){
-                                            LatLng myplce = new LatLng(location.getLatitude(), location.getLongitude());
-                                            googleMap.addMarker(new MarkerOptions().position(myplce).title("This is my home"));
-                                            googleMap.moveCamera(CameraUpdateFactory.newLatLng(myplce));
+                    .addOnSuccessListener(new OnSuccessListener<Location>() {
+                @Override
+                public void onSuccess(Location location) {
+                    if(location != null){
+                        LatLng myplce = new LatLng(location.getLatitude(), location.getLongitude());
+                        googleMap.addMarker(new MarkerOptions().position(myplce).title("This is my home"));
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLng(myplce));
 //                                            tvLatitude.setText(String.valueOf(location.getLatitude()));
 //                                            tvLongtitude.setText(String.valueOf(location.getLongitude()));
-                                        }else {
-                                            Toast.makeText(getContext(), "don't retrieve any location", Toast.LENGTH_LONG).show();
-                                        }
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                                    }
-                                });
+                    }else {
+                        Toast.makeText(getContext(), "don't retrieve any location", Toast.LENGTH_LONG).show();
                     }
+                }
+            })
+                    .addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            });
+        }
                 });
         return root;
     }
