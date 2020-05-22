@@ -81,6 +81,7 @@ public class GalleryFragment extends Fragment {
                 if(currentCountryName == null || currentCountryName == ""){
                     return;
                 }
+                pbSearchBar.setVisibility(View.VISIBLE);
                 SearchOneCountrySummary(currentCountryName);
             }
         });
